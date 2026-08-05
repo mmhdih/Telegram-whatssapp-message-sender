@@ -1,21 +1,20 @@
 {
-"name": "smart-sender",
+"name": "smart-sender-enterprise",
 "version": "1.0.0",
-"description": "WhatsApp and Telegram Mass Sender",
+"description": "Enterprise Bulk Messaging Automation for WhatsApp & Telegram",
 "main": "main.js",
-"author": "mmhdih",
+"author": "SmartSender Team",
 "homepage": "./",
 "scripts": {
 "start": "react-scripts start",
 "build": "react-scripts build",
 "electron:start": "electron .",
-"electron:pack": "electron-builder --dir",
 "electron:build": "electron-builder"
 },
 "build": {
 "extends": null,
-"appId": "com.smartsender.app",
-"productName": "Smart Sender",
+"appId": "com.smartsender.enterprise",
+"productName": "SmartSender Enterprise",
 "directories": {
 "output": "dist"
 },
@@ -27,7 +26,7 @@
 "target": "portable"
 },
 "portable": {
-"artifactName": "SmartSender-Portable.exe"
+"artifactName": "SmartSender-Enterprise-Portable.exe"
 }
 },
 "dependencies": {
