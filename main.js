@@ -6,18 +6,19 @@ let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 450,
-    height: 800,
-    resizable: false,
-    titleBarStyle: 'hidden',
+    width: 900,
+    height: 700,
+    minWidth: 800,
+    minHeight: 600,
+    title: 'SmartSender Enterprise - Google Workspace Edition',
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
     },
+    autoHideMenuBar: true,
   });
 
   if (app.isPackaged) {
-    // بررسی مسیرهای مختلف در حالت بیلد شده برای جلوگیری از خطای صفحه سفید
     const possiblePaths = [
       path.join(process.resourcesPath, 'app.asar', 'build', 'index.html'),
       path.join(process.resourcesPath, 'app', 'build', 'index.html'),
@@ -34,18 +35,17 @@ function createWindow() {
     }
 
     if (targetPath) {
-      console.log('Loading index from:', targetPath);
+      console.log('Loading production build from:', targetPath);
       mainWindow.loadFile(targetPath);
     } else {
-      console.error('CRITICAL: Build index.html not found in any standard path!');
+      console.error('CRITICAL: build/index.html not found!');
       mainWindow.loadURL(`file://${path.join(__dirname, 'build', 'index.html')}`);
     }
   } else {
-    // در حالت توسعه
+    // حالت توسعه (Development Mode)
     mainWindow.loadURL('http://localhost:3000');
   }
 
-  // ثبت خطاهای احتمالی لود صفحه
   mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
     console.error('Page load failed:', errorCode, errorDescription);
   });
@@ -61,6 +61,6 @@ app.on('window-all-closed', () => {
 
 ipcMain.handle('send-messages', async (event, data) => {
   const { platform, numbers, message } = data;
-  console.log(`Starting to send via ${platform}...`);
+  console.log(`Executing batch dispatch via ${platform} for ${numbers.length} targets...`);
   return { success: true };
 });
