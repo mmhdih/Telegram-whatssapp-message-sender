@@ -3,6 +3,7 @@
 "version": "1.0.0",
 "description": "WhatsApp and Telegram Mass Sender",
 "main": "main.js",
+"author": "mmhdih",
 "homepage": "./",
 "scripts": {
 "start": "react-scripts start",
@@ -12,10 +13,10 @@
 "electron:build": "electron-builder"
 },
 "build": {
+"extends": null,
 "appId": "com.smartsender.app",
 "productName": "Smart Sender",
 "directories": {
-"buildResources": "build",
 "output": "dist"
 },
 "files": [
@@ -35,8 +36,8 @@
 "react-dom": "^18.2.0"
 },
 "devDependencies": {
-"electron": "^27.0.0",
-"electron-builder": "^24.6.4",
+"electron": "^27.3.11",
+"electron-builder": "^24.13.3",
 "react-scripts": "5.0.1",
 "tailwindcss": "^3.3.0"
 },
