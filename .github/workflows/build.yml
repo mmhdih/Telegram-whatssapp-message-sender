@@ -11,26 +11,24 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4 # ارتقا به نسخه 4
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4 # ارتقا به نسخه 4
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Install Dependencies
         run: npm install
 
-      - name: Build React App
-        run: npm run build
-
+      # مرحله ساخت ریکت کلاً حذف شد! مستقیماً اپلیکیشن الکترون ساخته می‌شود
       - name: Build Electron App
         run: npm run electron:build
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4 # ارتقا به نسخه 4
+        uses: actions/upload-artifact@v4
         with:
           name: SmartSender-Portable-EXE
           path: dist/*.exe
