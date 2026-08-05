@@ -17,22 +17,38 @@ function createWindow() {
   });
 
   if (app.isPackaged) {
-    // در حالت بیلد شده (تولید فایل exe)
-    // مسیر دقیق پوشه build ریکت را مشخص می‌کنیم
-    const buildPath = path.join(__dirname, 'build', 'index.html');
-    
-    // بررسی می‌کنیم که آیا فایل واقعا وجود دارد یا خیر (برای دیباگ در صورت لزوم)
-    if (fs.existsSync(buildPath)) {
-        mainWindow.loadFile(buildPath);
+    // بررسی مسیرهای مختلف در حالت بیلد شده برای جلوگیری از خطای صفحه سفید
+    const possiblePaths = [
+      path.join(process.resourcesPath, 'app.asar', 'build', 'index.html'),
+      path.join(process.resourcesPath, 'app', 'build', 'index.html'),
+      path.join(__dirname, 'build', 'index.html'),
+      path.join(app.getAppPath(), 'build', 'index.html')
+    ];
+
+    let targetPath = null;
+    for (const p of possiblePaths) {
+      if (fs.existsSync(p)) {
+        targetPath = p;
+        break;
+      }
+    }
+
+    if (targetPath) {
+      console.log('Loading index from:', targetPath);
+      mainWindow.loadFile(targetPath);
     } else {
-        console.error('Build file not found at:', buildPath);
-        // به عنوان راهکار پشتیبان، اگر فایل بالا پیدا نشد، مسیر دیگری را تست می‌کنیم
-        mainWindow.loadFile(path.join(process.resourcesPath, 'app.asar', 'build', 'index.html'));
+      console.error('CRITICAL: Build index.html not found in any standard path!');
+      mainWindow.loadURL(`file://${path.join(__dirname, 'build', 'index.html')}`);
     }
   } else {
-    // در حالت توسعه (اجرای لوکال با npm start)
+    // در حالت توسعه
     mainWindow.loadURL('http://localhost:3000');
   }
+
+  // ثبت خطاهای احتمالی لود صفحه
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+    console.error('Page load failed:', errorCode, errorDescription);
+  });
 }
 
 app.whenReady().then(createWindow);
