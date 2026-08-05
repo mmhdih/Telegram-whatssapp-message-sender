@@ -1,29 +1,36 @@
-steps:
-- name: Checkout Repository
-  uses: actions/checkout@v3
+name: Build Portable EXE
 
-- name: Setup Node.js
-  uses: actions/setup-node@v3
-  with:
-    node-version: 18
+on:
+  push:
+    branches:
+      - main
 
-# نصب وابستگی‌ها
-- name: Install Dependencies
-  run: npm install
+jobs:
+  build:
+    runs-on: windows-latest
 
-# ساخت فایل‌های استاتیک ریکت
-- name: Build React App
-  run: npm run build
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-# ساخت فایل exe پرتابل با Electron Builder
-- name: Build Electron App
-  run: npm run electron:build
-  env:
-    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-# آپلود فایل ساخته شده به عنوان خروجی (Artifact) در گیت‌هاب
-- name: Upload Artifact
-  uses: actions/upload-artifact@v3
-  with:
-    name: SmartSender-Portable-EXE
-    path: dist/SmartSender-Portable.exe
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build React App
+        run: npm run build
+
+      - name: Build Electron App
+        run: npm run electron:build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: SmartSender-Portable-EXE
+          path: dist/*.exe
